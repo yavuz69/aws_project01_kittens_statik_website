@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Creates an EC2 instance with Apache, and allows inbound traffic on the SSH and HTTP ports'
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-0b5eea76982371e91
+      InstanceType: t2.micro
+      KeyName: second-key
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      UserData:
+        'Fn::Base64': !Sub |
+          #!/bin/bash
+          yum update -y # good practice to update existing packages
+          yum install -y httpd # install web server 
+          systemctl start httpd
+          systemctl enable httpd
+          sudo yum install -y git # Clone repository and move files to web root
+          cd /var/www/html
+          sudo git clone https://github.com/yavuz69/aws_project01_kittens_statik_website.git
+          # cd /var/www/html
+          # sudo rm index.html
+          # echo "Hello World" > /var/www/html/index.html
+          # mkdir /var/www/html/static-web 
+          # wget https://github.com/bekirokutan/my-projects/blob/main/kittens-carousel-static-website-ec2-cloudformation/static-web/cat0.jpg
+          # wget https://github.com/bekirokutan/my-projects/blob/main/kittens-carousel-static-website-ec2-cloudformation/static-web/cat1.jpg
+          # wget https://github.com/bekirokutan/my-projects/blob/main/kittens-carousel-static-website-ec2-cloudformation/static-web/cat2.jpg
+          # wget https://github.com/bekirokutan/my-projects/blob/main/kittens-carousel-static-website-ec2-cloudformation/static-web/cat3.jpg
+          # wget https://github.com/bekirokutan/my-projects/blob/main/kittens-carousel-static-website-ec2-cloudformation/static-web/index.html
+          systemctl start httpd
+          systemctl enable httpd
+      Tags:                                      
+        -                                       
+          Key: Name
+          Value: Web Server of StackName    
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow inbound traffic on the SSH and HTTP ports
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  WebAddress:
+    Description: The web address of the Apache server
+    Value: !Sub 'http://${EC2Instance.PublicIp}/aws_project01_kittens_statik_website/static-web/index.html'
