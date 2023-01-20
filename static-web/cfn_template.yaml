@@ -19,15 +19,6 @@ Resources:
           sudo yum install -y git # Clone repository and move files to web root
           cd /var/www/html
           sudo git clone https://github.com/yavuz69/aws_project01_kittens_statik_website.git
-          # cd /var/www/html
-          # sudo rm index.html
-          # echo "Hello World" > /var/www/html/index.html
-          # mkdir /var/www/html/static-web 
-          # wget https://github.com/yavuz69/aws_project01_kittens_statik_website/blob/main/static-web/cat0.jpg
-          # wget https://github.com/yavuz69/aws_project01_kittens_statik_website/blob/main/static-web/cat1.jpg
-          # wget https://github.com/yavuz69/aws_project01_kittens_statik_website/blob/main/static-web/cat2.jpg
-          # wget https://github.com/yavuz69/aws_project01_kittens_statik_website/blob/main/static-web/cat3.jpg
-          # wget https://github.com/yavuz69/aws_project01_kittens_statik_website/blob/main/static-web/index.html
           systemctl start httpd
           systemctl enable httpd
       Tags:                                      
